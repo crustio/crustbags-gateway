@@ -4,6 +4,7 @@ require('express-async-errors');
 import { existsSync } from "fs";
 import {configs} from "./config";
 const app = express();
+
 const regex = /^[A-Za-z0-9]{64}$/
 
 const badRequestResponse = {"statusCode":400,"error":"Bad Request","message":"Torrent is not ready yet"}
@@ -19,7 +20,7 @@ app.get('/gateway/:bagId', async (req: any, res: any) => {
     }
     // call tonutils-storage
     const detail = await getStorageInfo(bagId);
-    if (detail != null && detail.completed && detail.downloaded === detail.size) {
+    if (detail != null) {
         const path = getRealPath(`${detail.path}/${detail.dir_name}${detail.files[0].name}`)
         return existsSync(path) ? res.download(path, detail.files[0].name) : badRequest(res);
     }
@@ -34,7 +35,7 @@ app.get('/gateway/:bagId/*', async (req: any, res: any) => {
     }
     // call tonutils-storage
     const detail = await getStorageInfo(bagId);
-    if (detail != null && detail.completed && detail.downloaded === detail.size) {
+    if (detail != null) {
         for (const f of detail.files) {
             if (f.name === fileName || f.name.endsWith(fileName)) {
                 const path = getRealPath(`${detail.path}/${detail.dir_name}${f.name}`)
