@@ -21,8 +21,9 @@ app.get('/gateway/:bagId', async (req: any, res: any) => {
     // call tonutils-storage
     const detail = await getStorageInfo(bagId);
     if (detail != null) {
+        const downloadFileName = req.query.filename ? req.query.filename : detail.files[0].name;
         const path = getRealPath(`${detail.path}/${detail.dir_name}${detail.files[0].name}`)
-        return existsSync(path) ? res.download(path, detail.files[0].name) : badRequest(res);
+        return existsSync(path) ? res.download(path, downloadFileName) : badRequest(res);
     }
     return badRequest(res);
 });
@@ -30,6 +31,7 @@ app.get('/gateway/:bagId', async (req: any, res: any) => {
 app.get('/gateway/:bagId/*', async (req: any, res: any) => {
     const bagId = req.params.bagId;
     const fileName = req.params[0];
+
     if (!regex.test(bagId)) {
         return badRequest(res);
     }
@@ -38,6 +40,7 @@ app.get('/gateway/:bagId/*', async (req: any, res: any) => {
     if (detail != null) {
         for (const f of detail.files) {
             if (f.name === fileName || f.name.endsWith(fileName)) {
+                const downloadFileName = req.query.filename ? req.query.filename : f.name;
                 const path = getRealPath(`${detail.path}/${detail.dir_name}${f.name}`)
                 return existsSync(path) ? res.download(path) : badRequest(res);
             }
