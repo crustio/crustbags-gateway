@@ -6,7 +6,7 @@ on:
     branches: [ "main" ]
 jobs:
   build:
-    if: github.repository == 'crustio/tonbags-gateway'
+    if: github.repository == 'crustio/crustbags-gateway'
     runs-on: ubuntu-latest
     strategy:
       matrix:
