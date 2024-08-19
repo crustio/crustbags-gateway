@@ -54,5 +54,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            crustio/tonbags-gateway:latest
-            crustio/tonbags-gateway:${{ env.date }}
+            crustio/crustbags-gateway:latest
+            crustio/crustbags-gateway:${{ env.date }}
